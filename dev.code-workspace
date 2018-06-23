@@ -1,0 +1,15 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+    "files.insertFinalNewline": true,
+    "search.exclude": {
+      "**/node_modules": true
+    },
+    "tslint.enable": true
+  }
+}
