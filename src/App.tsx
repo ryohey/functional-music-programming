@@ -1,38 +1,10 @@
 import React from 'react'
-import vis from "vis"
-import Soundfont from "soundfont-player"
-import data from "./mysong"
+import song from "./mysong"
+import { play } from './player';
 
 class App extends React.Component {
   componentDidMount() {
-    const ac = new AudioContext()
-    const bpm = 120
-    const beatToSeconds = (beat: number) => beat * 60 / bpm
-    const soundfont = 'FluidR3_GM'
-
-    Promise.all([
-      Soundfont.instrument(ac, 'percussion', { soundfont }),
-      Soundfont.instrument(ac, 'electric_bass_finger', { soundfont })
-    ])
-      .then(([drums, bass]: any[]) => {
-        {
-          const notes = data.drums.map(n => ({
-            note: n.pitch,
-            time: beatToSeconds(n.time),
-            // duration: beatToSeconds(n.duration)
-          }))
-          drums.schedule(ac.currentTime, notes)
-        }
-
-        {
-          const notes = data.bass.map(n => ({
-            note: n.pitch,
-            time: beatToSeconds(n.time),
-            // duration: beatToSeconds(n.duration)
-          }))
-          bass.schedule(ac.currentTime, notes)
-        }
-    })
+    play(song)
   }
 
   public render() {

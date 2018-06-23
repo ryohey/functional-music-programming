@@ -1,5 +1,6 @@
-import { loop, rhythm } from "./music"
+import { loop, rhythm, majorScale, compose, stroke, legato } from "./music"
 import _ from "lodash"
+import { Song } from "./song";
 
 const n4th = 1
 const n8th = n4th / 2
@@ -31,12 +32,29 @@ const drums = loop(4, 8)(_.concat(
   loop(8, 1)([hihat_close])
 ))
 
-const bass = loop(8, 1)([{
-  pitch: 38,
-  duration: 1,
+const bass = compose(
+  legato(),
+  loop(2, 8),
+  stroke(1),
+)(majorScale(38).map(pitch => ({
+  pitch,
+  duration: 0.1,
   time: 0
-}])
+})))
 
-export default {
-  drums, bass
+const song: Song = {
+  tracks: [
+    {
+      instrument: "percussion",
+      notes: drums
+    },
+    {
+      instrument: "electric_bass_finger",
+      notes: bass
+    }
+  ]
 }
+
+console.log(song)
+
+export default song

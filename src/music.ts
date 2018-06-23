@@ -43,9 +43,27 @@ export const template = (pattern: Time[]): Transformer => notes =>
 // x _ xx_ x _x x_
 export const rhythm = (pattern: string, unitTime: number = 1, noteChar: string = "x"): Transformer =>
   template(pattern
-           .split("")
-           .map((c, i) => c === noteChar ? i * unitTime : -1)
-           .filter(t => t >= 0))
+    .split("")
+    .map((c, i) => c === noteChar ? i * unitTime : -1)
+    .filter(t => t >= 0))
+
+export const stroke = (offset: Time): Transformer => notes =>
+  notes.map((n, i) => ({
+    ...n,
+    time: i * offset
+  }))
+
+export const legato = (): Transformer => notes =>
+notes.map((n, i) => {
+  const next = notes[i + 1]
+  const duration = next !== undefined ? next.time - n.time : n.duration
+  return {
+    ...n,
+    duration
+  }
+})
+
+/* scale */
 
 export const createScale = (intervals: number[], root: Pitch): Scale => {
   let prev = root
@@ -60,16 +78,6 @@ export const majorScale = (root: Pitch): Scale =>
   createScale([0, 2, 2, 1, 2, 2, 2], root)
 
 console.log(majorScale(0))
-
-export const legato = (): Transformer => notes =>
-  notes.map((n, i) => {
-    const next = notes[i + 1]
-    const duration = next !== undefined ? next.time - n.time : n.duration
-    return {
-      ...n,
-      duration
-    }
-  })
 
 /*
 const data = compose(
