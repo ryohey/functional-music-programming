@@ -25,8 +25,18 @@ const hihat_close = {
   time: 0
 }
 
-export default loop(4, 8)(_.concat(
+const drums = loop(4, 8)(_.concat(
   rhythm("x _ xx_ x _x x_", n8th)([kick]), 
   rhythm("_ x __x _ x_ _x", n8th)([snare]), 
   loop(8, 1)([hihat_close])
 ))
+
+const bass = loop(8, 1)([{
+  pitch: 38,
+  duration: 1,
+  time: 0
+}])
+
+export default {
+  drums, bass
+}
