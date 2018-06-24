@@ -11,11 +11,12 @@ export interface Note {
 
 type Transformer = (notes: Note[]) => Note[]
 type Scale = Pitch[]
+type ScaleTransformer = (scale: Scale) => Scale
 
 export const compose = (...transformers: Transformer[]): Transformer =>
   _.flowRight(transformers)
 
-export const translate = (pitch: Pitch): Transformer => notes =>
+export const transpose = (pitch: Pitch): Transformer => notes =>
   notes.map(n => ({ 
     ...n, 
     pitch: n.pitch + pitch
@@ -77,12 +78,27 @@ export const createScale = (intervals: number[], root: Pitch): Scale => {
 export const majorScale = (root: Pitch): Scale =>
   createScale([0, 2, 2, 1, 2, 2, 2], root)
 
-console.log(majorScale(0))
+// Scale の範囲を超えたらオクターブ上を返す
+export const scaleNote = (scale:Scale, index: number): Pitch => 
+  scale[index % scale.length] + Math.floor(index / scale.length) * 12
+
+export const triad = (index: number): ScaleTransformer => scale =>
+  [
+    scaleNote(scale, index + 0),
+    scaleNote(scale, index + 2),
+    scaleNote(scale, index + 4),
+  ]
+
+export const pitchToNote = (pitch: Pitch): Note => ({
+  pitch,
+  duration: 0,
+  time: 0
+})
 
 /*
 const data = compose(
   loop(30, 4),
   repeat(1/2),
-  duplicate(translate(5))
+  duplicate(transpose(5))
 )([noteC])
 */

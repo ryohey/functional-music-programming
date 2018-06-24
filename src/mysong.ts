@@ -1,4 +1,4 @@
-import { loop, rhythm, majorScale, compose, stroke, legato } from "./music"
+import { loop, rhythm, majorScale, compose, stroke, legato, transpose, triad, pitchToNote, move } from "./music"
 import _ from "lodash"
 import { Song } from "./song";
 
@@ -32,15 +32,21 @@ const drums = loop(4, 8)(_.concat(
   loop(8, 1)([hihat_close])
 ))
 
+const scale = majorScale(38)
+
 const bass = compose(
   legato(),
   loop(2, 8),
   stroke(1),
-)(majorScale(38).map(pitch => ({
-  pitch,
-  duration: 0.1,
-  time: 0
-})))
+)(scale.map(pitchToNote))
+
+const piano = compose(
+  loop(2, 8),
+  transpose(12),
+)(_.concat(
+  move(0)(triad(0)(scale).map(pitchToNote)),
+  move(2)(triad(1)(scale).map(pitchToNote)),
+))
 
 const song: Song = {
   tracks: [
@@ -51,6 +57,10 @@ const song: Song = {
     {
       instrument: "electric_bass_finger",
       notes: bass
+    },
+    {
+      instrument: "electric_piano_1",
+      notes: piano
     }
   ]
 }
