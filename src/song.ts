@@ -1,4 +1,4 @@
-import { Note } from "./music"
+import { Note } from "./types"
 
 export interface Track {
   instrument: string

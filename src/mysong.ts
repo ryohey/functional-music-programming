@@ -1,6 +1,11 @@
-import { loop, rhythm, majorScale, compose, stroke, legato, transpose, triad, pitchToNote, move } from "./music"
 import _ from "lodash"
-import { Song } from "./song";
+import { Song } from "./song"
+import { loop, rhythm, stroke, move } from "./transformer/TimeTransformer"
+import { majorScale, triad, pitchToNote } from "./scale"
+import { compose } from "./transformer/Transformer"
+import { legato } from "./transformer/PeriodTransformer"
+import { transpose } from "./transformer/PitchTransformer"
+import { Note } from "./types"
 
 const n4th = 1
 const n8th = n4th / 2
@@ -40,7 +45,7 @@ const bass = compose(
   stroke(1),
 )(scale.map(pitchToNote))
 
-const piano = compose(
+const piano = compose<Note>(
   loop(2, 8),
   transpose(12),
 )(_.concat(

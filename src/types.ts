@@ -1,17 +1,24 @@
 export type PitchValue = number // note number
-export type Time = number // beat
+export type TimeValue = number // beat
 
-export interface Pitch {
+export type Pitch = {
   pitch: PitchValue
 }
 
-export interface Period {
-  duration: Time
-  time: Time
+export type Duration = {
+  duration: TimeValue
 }
+
+export type Time = {
+  time: TimeValue
+}
+
+export type Period = Time & Duration
 
 export type Note = Pitch & Period
 
 export type Rhythm = Period[]
 
 export type Scale = Pitch[]
+
+export type Transformer<T> = <S extends T>(notes: S[]) => S[]
