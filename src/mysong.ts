@@ -1,7 +1,7 @@
 import _ from "lodash"
 import { Song } from "./song"
 import { loop, rhythm, stroke, move } from "./transformer/TimeTransformer"
-import { majorScale, triad, pitchToNote } from "./scale"
+import { majorScale, triad, pitchToNote, naturalMinorScale, harmonicMinorScale } from "./scale"
 import { compose } from "./transformer/Transformer"
 import { legato } from "./transformer/PeriodTransformer"
 import { transpose } from "./transformer/PitchTransformer"
@@ -37,7 +37,7 @@ const drums = loop(4, 8)(_.concat(
   loop(8, 1)([hihat_close])
 ))
 
-const scale = majorScale(38)
+const scale = naturalMinorScale(38)
 
 const bass = compose(
   legato(),
