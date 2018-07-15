@@ -53,6 +53,13 @@ const piano = compose<Note>(
   move(2)(triad(1)(scale).map(pitchToNote)),
 ))
 
+const melody = compose(
+  transpose(24),
+  loop(2, 8),
+  legato(),
+  stroke(1),
+)([0, -1, 0, 1, 2, 4, -1, 0].map(i => scale(i)).map(pitchToNote))
+
 const song: Song = {
   tracks: [
     {
@@ -66,6 +73,10 @@ const song: Song = {
     {
       instrument: "electric_piano_1",
       notes: piano
+    },
+    {
+      instrument: "ocarina",
+      notes: melody
     }
   ]
 }

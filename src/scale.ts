@@ -1,5 +1,8 @@
 import { PitchValue, Scale, Pitch, Note, ScaleIndex } from "./types"
 
+// circular modulo
+const cmod = (i, N) => i < 0 ? i = N + (i % N) : i = i % N
+
 export const createScale = (intervals: number[], root: PitchValue): Scale => {
   let prev = root
   const scale = intervals.map(i => {
@@ -7,9 +10,10 @@ export const createScale = (intervals: number[], root: PitchValue): Scale => {
     prev = pitch
     return { pitch }
   })
+
   // Scale の範囲を超えたらオクターブ上を返す
   return index => ({ 
-    pitch: scale[index % scale.length].pitch + Math.floor(index / scale.length) * 12 
+    pitch: scale[cmod(index, scale.length)].pitch + Math.floor(index / scale.length) * 12 
   })
 }
 

@@ -7,8 +7,8 @@ import { gain, compose as composeNodes, delay, reverb, mix } from './audio-graph
 async function audioProcessing(ctx: AudioContextBase) {
   console.log("audioProcessing")
   const effect = composeNodes(
-    mix(0.5)(reverb()),
-    mix(0.4)(delay(0.2, 0.5)),
+    mix(0.2)(reverb()),
+    mix(0.1)(delay(0.2, 0.5)),
     gain(0.6),
   )(ctx.createGain())
   effect.connect(ctx.destination)
