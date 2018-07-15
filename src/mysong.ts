@@ -43,7 +43,7 @@ const bass = compose(
   legato(),
   loop(2, 8),
   stroke(1),
-)(scale.map(pitchToNote))
+)([0, 1, 2, 3, 4, 5, 6].map(i => scale(i)).map(pitchToNote))
 
 const piano = compose<Note>(
   loop(2, 8),

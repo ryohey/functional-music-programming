@@ -19,6 +19,8 @@ export type Note = Pitch & Period
 
 export type Rhythm = Period[]
 
-export type Scale = Pitch[]
+export type ScaleIndex = number
+
+export type Scale = (index: ScaleIndex) => Pitch
 
 export type Transformer<T> = <S extends T>(notes: S[]) => S[]

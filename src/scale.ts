@@ -1,11 +1,15 @@
-import { PitchValue, Scale, Pitch, Note } from "./types"
+import { PitchValue, Scale, Pitch, Note, ScaleIndex } from "./types"
 
 export const createScale = (intervals: number[], root: PitchValue): Scale => {
   let prev = root
-  return intervals.map(i => {
+  const scale = intervals.map(i => {
     const pitch = prev + i
     prev = pitch
     return { pitch }
+  })
+  // Scale の範囲を超えたらオクターブ上を返す
+  return index => ({ 
+    pitch: scale[index % scale.length].pitch + Math.floor(index / scale.length) * 12 
   })
 }
 
@@ -42,15 +46,11 @@ export const minorPentatonicBlues = (root: PitchValue): Scale =>
 export const majorPentatonicBlues = (root: PitchValue): Scale =>
   createScale([0, 2, 1, 1, 3, 2], root)
   
-// Scale の範囲を超えたらオクターブ上を返す
-export const scaleNote = (scale: Scale, index: number): Pitch => 
-  ({ pitch: scale[index % scale.length].pitch + Math.floor(index / scale.length) * 12 })
-
-export const triad = (index: number) => (scale: Scale): Pitch[] =>
+export const triad = (index: ScaleIndex) => (scale: Scale): Pitch[] =>
   [
-    scaleNote(scale, index + 0),
-    scaleNote(scale, index + 2),
-    scaleNote(scale, index + 4),
+    scale(index + 0),
+    scale(index + 2),
+    scale(index + 4),
   ]
 
 export const pitchToNote = (pitch: Pitch): Note => Object.assign({}, pitch, ({
