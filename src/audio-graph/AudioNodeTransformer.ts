@@ -8,58 +8,57 @@ export type AudioNodeTransformer = (node: AudioNode) => AudioNode
 export const compose = <T>(...transformers: AudioNodeTransformer[]): AudioNodeTransformer =>
   _.flowRight(transformers)
 
-export const gain = (gainValue: number): AudioNodeTransformer => node => {
-  const { context } = node
-  const gainNode = context.createGain()
-  gainNode.gain.setValueAtTime(gainValue, context.currentTime)
-  return composite(node, gainNode)
-}
-
-export const delay = (delayTime: number, mix: number = 0.3, feedbackGain: number = 0.5): AudioNodeTransformer => node => {
-  const { context } = node
-  const delayNode = context.createDelay()
-  delayNode.delayTime.setValueAtTime(delayTime, context.currentTime)
+export const mix = (amount: number = 0.5) => (fx: AudioNodeTransformer): AudioNodeTransformer => input => {
+  const { context } = input
   
-  const input = context.createGain()
   const output = context.createGain()
-  const delay = context.createDelay()
+  const fxNode = fx(context.createGain())
   const wetlevel = context.createGain()
   const drylevel = context.createGain()
-  const feedback = context.createGain()
-  node.connect(input)
-  input.connect(delay)
+  input.connect(fxNode)
   input.connect(drylevel)
-  delay.connect(wetlevel)
-  delay.connect(feedback)
-  feedback.connect(delay)
+  fxNode.connect(wetlevel)
   wetlevel.connect(output)
   drylevel.connect(output)
 
+  wetlevel.gain.value = amount
+  drylevel.gain.value = 1 - amount
+
+  return composite(input, output)
+}
+
+export const gain = (gainValue: number): AudioNodeTransformer => input => {
+  const { context } = input
+  const gainNode = context.createGain()
+  gainNode.gain.setValueAtTime(gainValue, context.currentTime)
+  input.connect(gainNode)
+  return composite(input, gainNode)
+}
+
+export const delay = (delayTime: number, feedbackGain: number = 0.5): AudioNodeTransformer => input => {
+  const { context } = input
+  const delayNode = context.createDelay()
+  delayNode.delayTime.setValueAtTime(delayTime, context.currentTime)
+  
+  const delay = context.createDelay()
+  const feedback = context.createGain()
+  input.connect(delay)
+  delay.connect(feedback)
+  feedback.connect(delay)
+
   delay.delayTime.value = delayTime
   feedback.gain.value = feedbackGain
-  wetlevel.gain.value = mix
-  drylevel.gain.value = 1 - mix
 
-  return composite(node, output)
+  return composite(input, delay)
 }
 
 const defaultIRBuffer = base64ToArrayBuffer(roomIR)
 
-export const reverb = (mix: number, irBuffer: ArrayBuffer = defaultIRBuffer): AudioNodeTransformer => input => {
+export const reverb = (irBuffer: ArrayBuffer = defaultIRBuffer): AudioNodeTransformer => input => {
   const { context } = input
-  const output = context.createGain()
   const convolver = context.createConvolver()
-  const wetlevel = context.createGain()
-  const drylevel = context.createGain()
 
   input.connect(convolver)
-  input.connect(drylevel)
-  convolver.connect(wetlevel)
-  wetlevel.connect(output)
-  drylevel.connect(output)
-  
-  wetlevel.gain.value = mix
-  drylevel.gain.value = 1 - mix
 
   // read ir from base64 string
   {  
@@ -68,5 +67,5 @@ export const reverb = (mix: number, irBuffer: ArrayBuffer = defaultIRBuffer): Au
     })
   }
 
-  return composite(input, output)
+  return composite(input, convolver)
 }

@@ -2,13 +2,13 @@ import React from 'react'
 import song from "./mysong"
 import { play } from './player'
 import Soundfont from "soundfont-player"
-import { gain, compose as composeNodes, delay, reverb } from './audio-graph/AudioNodeTransformer'
+import { gain, compose as composeNodes, delay, reverb, mix } from './audio-graph/AudioNodeTransformer'
 
 async function audioProcessing(ctx: AudioContextBase) {
   console.log("audioProcessing")
   const effect = composeNodes(
-    reverb(0.5),
-    delay(0.2, 0.4, 0.5),
+    mix(0.5)(reverb()),
+    mix(0.4)(delay(0.2, 0.5)),
     gain(0.6),
   )(ctx.createGain())
   effect.connect(ctx.destination)
