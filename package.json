@@ -6,7 +6,7 @@
     "composite-audio-node": "file:./packages/composite-audio-node",
     "lodash": "^4.17.10",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react-dom": "^16.4.2",
     "soundfont-player": "github:danigb/soundfont-player#58d8d2fe3170aa427b8af31f9971de5bbb26295c",
     "vis": "^4.21.0"
   },
