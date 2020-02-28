@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "composite-audio-node": "file:./packages/composite-audio-node",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.13",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "soundfont-player": "github:danigb/soundfont-player#58d8d2fe3170aa427b8af31f9971de5bbb26295c",
